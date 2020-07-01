@@ -113,11 +113,19 @@ class BowlingGameTest extends TestCase
         $this->assertEquals(300, $score);
     }
 
-    public function testGetScore_withANegativeRolls_getException()
+    public function testRolls_withANegativePointsForARoll_getException()
     {
         $game = new BowlingGame();
 
         $this->expectException(BowlingGameException::class);
         $game->roll(-1);
+    }
+
+    public function testRolls_withMorePointsThanAllowed_getException()
+    {
+        $game = new BowlingGame();
+
+        $this->expectException(BowlingGameException::class);
+        $game->roll(11);
     }
 }
