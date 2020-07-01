@@ -128,4 +128,16 @@ class BowlingGameTest extends TestCase
         $this->expectException(BowlingGameException::class);
         $game->roll(11);
     }
+
+    public function testGetScore_withMoreRollsThanAllowed_getException()
+    {
+        $game = new BowlingGame();
+
+        for ($i = 0; $i < 25; $i++) {
+            $game->roll(1);
+        }
+
+        $this->expectException(BowlingGameException::class);
+        $game->getScore();
+    }
 }
