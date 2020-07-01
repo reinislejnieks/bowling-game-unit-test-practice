@@ -9,6 +9,7 @@ class BowlingGame
     private const MIN_SCORE_FOR_A_ROLL = 0;
     private const MAX_SCORE_FOR_A_STRIKE = 10;
     private const MAX_ROLL_COUNT = 21;
+    private const MIN_ROLL_COUNT = 12;
     private array $rolls = [];
 
     /**
@@ -30,6 +31,12 @@ class BowlingGame
         if (count($this->rolls) > self::MAX_ROLL_COUNT) {
             throw new BowlingGameException(
                 'Maximum allowed rolls in game can\'t be more than' . self::MAX_ROLL_COUNT
+            );
+        }
+
+        if (count($this->rolls) < self::MIN_ROLL_COUNT) {
+            throw new BowlingGameException(
+                'Minimum allowed rolls in game can\'t be less than' . self::MIN_ROLL_COUNT
             );
         }
 
