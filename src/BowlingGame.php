@@ -7,9 +7,10 @@ use PF\Exceptions\BowlingGameException;
 class BowlingGame
 {
     private const MIN_SCORE_FOR_A_ROLL = 0;
-    private const MAX_SCORE_FOR_A_STRIKE = 10;
     private const MAX_ROLL_COUNT = 21;
     private const MIN_ROLL_COUNT = 12;
+    private const SCORE_FOR_A_STRIKE = 10;
+    private const MAX_FRAMES_PER_GAME = 10;
     private array $rolls = [];
 
     /**
@@ -18,31 +19,25 @@ class BowlingGame
      */
     public function roll(int $score): void
     {
-        $this->validateRoll($score);
+        $this->validateSingleRollScore($score);
 
         $this->rolls[] = $score;
     }
 
+    /**
+     * @return int
+     * @throws BowlingGameException
+     */
     public function getScore(): int
     {
         $score = 0;
         $roll = 0;
 
-        if (count($this->rolls) > self::MAX_ROLL_COUNT) {
-            throw new BowlingGameException(
-                'Maximum allowed rolls in game can\'t be more than' . self::MAX_ROLL_COUNT
-            );
-        }
+        $this->validateRollCount();
 
-        if (count($this->rolls) < self::MIN_ROLL_COUNT) {
-            throw new BowlingGameException(
-                'Minimum allowed rolls in game can\'t be less than' . self::MIN_ROLL_COUNT
-            );
-        }
-
-        for ($frame = 0; $frame < 10; $frame++) {
+        for ($frame = 0; $frame < self::MAX_FRAMES_PER_GAME; $frame++) {
             if ($this->isStrike($roll)) {
-                $score += 10 + $this->getStrikeBonus($roll);
+                $score += self::SCORE_FOR_A_STRIKE + $this->getStrikeBonus($roll);
                 $roll++;
                 continue;
             }
@@ -75,7 +70,7 @@ class BowlingGame
      */
     private function isSpare(int $roll): bool
     {
-        return $this->getNormalScore($roll) === self::MAX_SCORE_FOR_A_STRIKE;
+        return $this->getNormalScore($roll) === self::SCORE_FOR_A_STRIKE;
     }
 
     /**
@@ -102,21 +97,37 @@ class BowlingGame
      */
     private function isStrike(int $roll): bool
     {
-        return $this->rolls[$roll] === self::MAX_SCORE_FOR_A_STRIKE;
+        return $this->rolls[$roll] === self::SCORE_FOR_A_STRIKE;
     }
 
     /**
      * @param int $score
      * @throws BowlingGameException
      */
-    private function validateRoll(int $score): void
+    private function validateSingleRollScore(int $score): void
     {
         if ($score < self::MIN_SCORE_FOR_A_ROLL) {
             throw new BowlingGameException('Score can\'t be negative!');
         }
 
-        if ($score > self::MAX_SCORE_FOR_A_STRIKE) {
-            throw new BowlingGameException('Score can\'t be more than ' . self::MAX_SCORE_FOR_A_STRIKE);
+        if ($score > self::SCORE_FOR_A_STRIKE) {
+            throw new BowlingGameException('Score can\'t be more than ' . self::SCORE_FOR_A_STRIKE);
+        }
+    }
+
+    private function validateRollCount(): void
+    {
+        $rollCount = count($this->rolls);
+        if ($rollCount > self::MAX_ROLL_COUNT) {
+            throw new BowlingGameException(
+                'Maximum allowed rolls in game can\'t be more than' . self::MAX_ROLL_COUNT
+            );
+        }
+
+        if ($rollCount < self::MIN_ROLL_COUNT) {
+            throw new BowlingGameException(
+                'Minimum allowed rolls in game can\'t be less than' . self::MIN_ROLL_COUNT
+            );
         }
     }
 }
