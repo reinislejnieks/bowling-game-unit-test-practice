@@ -1,6 +1,7 @@
 <?php
 
 use PF\BowlingGame;
+use PF\Exceptions\BowlingGameException;
 use PHPUnit\Framework\TestCase;
 
 class BowlingGameTest extends TestCase
@@ -110,5 +111,13 @@ class BowlingGameTest extends TestCase
 
         // assert part
         $this->assertEquals(300, $score);
+    }
+
+    public function testGetScore_withANegativeRolls_getException()
+    {
+        $game = new BowlingGame();
+
+        $this->expectException(BowlingGameException::class);
+        $game->roll(-1);
     }
 }

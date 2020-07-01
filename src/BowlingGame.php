@@ -2,12 +2,22 @@
 
 namespace PF;
 
+use PF\Exceptions\BowlingGameException;
+
 class BowlingGame
 {
     private array $rolls = [];
 
+    /**
+     * @param int $score
+     * @throws BowlingGameException
+     */
     public function roll(int $score): void
     {
+        if ($score < 0) {
+            throw new BowlingGameException('Rolls can\'t be negative!');
+        }
+
         $this->rolls[] = $score;
     }
 
