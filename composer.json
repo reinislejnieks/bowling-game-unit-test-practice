@@ -1,0 +1,12 @@
+{
+    "name": "pf/bowling",
+    "type": "project",
+    "require": {
+        "phpunit/phpunit": "^9.1"
+    },
+    "autoload":  {
+        "psr-4": {
+            "PF\\": "src/"
+        }
+    }
+}
