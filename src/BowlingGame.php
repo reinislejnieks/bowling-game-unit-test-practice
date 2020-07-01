@@ -6,6 +6,8 @@ use PF\Exceptions\BowlingGameException;
 
 class BowlingGame
 {
+    private const MIN_SCORE_FOR_A_ROLL = 0;
+    private const MAX_SCORE_FOR_A_ROLL = 10;
     private array $rolls = [];
 
     /**
@@ -14,9 +16,7 @@ class BowlingGame
      */
     public function roll(int $score): void
     {
-        if ($score < 0) {
-            throw new BowlingGameException('Rolls can\'t be negative!');
-        }
+        $this->validateRoll($score);
 
         $this->rolls[] = $score;
     }
@@ -89,5 +89,20 @@ class BowlingGame
     private function isStrike(int $roll): bool
     {
         return $this->rolls[$roll] === 10;
+    }
+
+    /**
+     * @param int $score
+     * @throws BowlingGameException
+     */
+    private function validateRoll(int $score): void
+    {
+        if ($score < self::MIN_SCORE_FOR_A_ROLL) {
+            throw new BowlingGameException('Score can\'t be negative!');
+        }
+
+        if ($score > self::MAX_SCORE_FOR_A_ROLL) {
+            throw new BowlingGameException('Score can\'t be more than 11!');
+        }
     }
 }
