@@ -152,4 +152,21 @@ class BowlingGameTest extends TestCase
         $this->expectException(BowlingGameException::class);
         $game->getScore();
     }
+
+    public function testGetScore_withAllZeroesAndLastFrameStrike_getScore17()
+    {
+        $game = new BowlingGame();
+
+        for ($i = 0; $i < 18; $i++) {
+            $game->roll(0);
+        }
+
+        $game->roll(10);
+        $game->roll(4);
+        $game->roll(3);
+
+        $score = $game->getScore();
+
+        $this->assertEquals(17, $score);
+    }
 }
